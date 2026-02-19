@@ -92,6 +92,15 @@ public class IntQueueTest {
     }
 
     @Test
+    public void testClear() {
+        for (int i = 0; i < testList.size(); i++) {
+            mQueue.enqueue(testList.get(i));
+        }
+        mQueue.clear();
+        assertTrue(mQueue.isEmpty());
+    }
+
+    @Test
     public void testContent() throws IOException {
         // This is an example unit test
         InputStream in = new FileInputStream("src/test/resources/data.txt");
@@ -99,11 +108,19 @@ public class IntQueueTest {
             scanner.useDelimiter("\\s*fish\\s*");
 
             List<Integer> correctResult = new ArrayList<>();
+            boolean first = true;
             while (scanner.hasNextInt()) {
                 int input = scanner.nextInt();
-                correctResult.add(input);
+                
                 System.out.println("enqueue: " + input);
                 mQueue.enqueue(input);
+
+                if (first) {
+                    assertEquals(mQueue.dequeue().intValue(), input);
+                    first = false;
+                } else {
+                    correctResult.add(input);
+                }
             }
 
             for (Integer result : correctResult) {
